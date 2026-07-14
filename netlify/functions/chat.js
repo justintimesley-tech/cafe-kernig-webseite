@@ -35,4 +35,18 @@ exports.handler = async function (event) {
       console.error("Anthropic hat einen Fehler zurückgegeben:", JSON.stringify(daten));
     }
 
-    const antwortText =
+    const antwortText = daten.content.map(teil => teil.text || "").join("");
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ antwort: antwortText })
+    };
+
+  } catch (fehler) {
+    console.error("Fehler beim Aufruf der Anthropic-API:", fehler.message);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ antwort: "Entschuldigung, da ist etwas schiefgelaufen." })
+    };
+  }
+};
